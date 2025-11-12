@@ -24,6 +24,7 @@ public class AttrController {
     private AttrKeyService attrKeyService;
     @Autowired
     private AttrValueService attrValueService;
+
     @Operation(summary = "新增或更新属性名称")
     @PostMapping("key/saveOrUpdate")
     public Result saveOrUpdateAttrKey(@RequestBody AttrKey attrKey) {
@@ -42,7 +43,9 @@ public class AttrController {
     @Operation(summary = "查询全部属性名称和属性值列表")
     @GetMapping("list")
     public Result<List<AttrKeyVo>> listAttrInfo() {
-        return Result.ok();
+        //需要查询 2 张表
+        List<AttrKeyVo> list = attrKeyService.listAttrInfo();
+        return Result.ok(list);
     }
 
     @Operation(summary = "根据id删除属性名称")
