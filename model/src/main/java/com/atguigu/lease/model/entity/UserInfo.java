@@ -22,7 +22,8 @@ public class UserInfo extends BaseEntity {
     private String phone;
 
     @Schema(description = "密码")
-    @TableField(value = "password")
+    @TableField(value = "password", select = false)
+    // select = false ：mybatis-plus的通用sql,通用map中不会查询这个字段
     private String password;
 
     @Schema(description = "头像url")
