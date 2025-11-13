@@ -1,4 +1,4 @@
-# aiguigu-lease(尚硅谷-尚庭公寓)
+# atguigu-lease(尚硅谷-尚庭公寓)
 ```tex
 尚硅谷-尚庭公寓学习练手(请多包涵)
 ```
@@ -28,4 +28,18 @@ PS> setx MINIO_ROOT_PASSWORD password
 '启动命令'
 PS> C:\minio.exe server F:\Data --console-address ":9001"
 ```
+
+### 文档
+
+```tex
+MinIo （window端） --> https://minio.org.cn/docs/minio/windows/index.html
+```
+
+
+
+```te
+corn表达式 -->  https://developer.aliyun.com/article/1349827
+```
+
+
 

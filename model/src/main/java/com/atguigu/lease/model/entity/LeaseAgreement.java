@@ -1,15 +1,15 @@
 package com.atguigu.lease.model.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import com.atguigu.lease.model.enums.LeaseSourceType;
 import com.atguigu.lease.model.enums.LeaseStatus;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Schema(description = "租约信息表")
 @TableName(value = "lease_agreement")
@@ -41,12 +41,12 @@ public class LeaseAgreement extends BaseEntity {
     @Schema(description = "租约开始日期")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @TableField(value = "lease_start_date")
-    private Date leaseStartDate;
+    private LocalDateTime leaseStartDate;
 
     @Schema(description = "租约结束日期")
     @TableField(value = "lease_end_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date leaseEndDate;
+    private LocalDateTime leaseEndDate;
 
     @Schema(description = "租期id")
     @TableField(value = "lease_term_id")
