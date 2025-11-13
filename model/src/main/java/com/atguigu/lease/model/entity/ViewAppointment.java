@@ -34,7 +34,8 @@ public class ViewAppointment extends BaseEntity {
 
     @Schema(description = "预约时间")
     @TableField(value = "appointment_time")
-    private Date appointmentTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime appointmentTime;
 
     @Schema(description = "备注信息")
     @TableField(value = "additional_info")

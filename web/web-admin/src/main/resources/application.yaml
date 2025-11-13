@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss # 全局配置jackson格式化日期
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://localhost:3306/lease?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2b8
@@ -33,3 +35,4 @@ minio:
 
 springdoc:
   default-flat-param-object: true # 默认展开参数
+
