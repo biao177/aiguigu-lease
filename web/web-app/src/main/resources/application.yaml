@@ -26,3 +26,10 @@ mybatis-plus:
 
 springdoc:
   default-flat-param-object: true
+
+aliyun:
+  sms:
+    enable: false # 如果不启用，则模拟验证码给前端
+    access-key-id: 'XXXXXXXXXX'
+    access-key-secret: 'XXXXXXXXXX'
+    endpoint: dysmsapi.aliyuncs.com
