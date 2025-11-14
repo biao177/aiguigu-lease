@@ -35,11 +35,11 @@ PS> C:\minio.exe server F:\Data --console-address ":9001"
 MinIo （window端） --> https://minio.org.cn/docs/minio/windows/index.html
 ```
 
-
-
 ```te
 corn表达式 -->  https://developer.aliyun.com/article/1349827
 ```
 
-
+```tex
+jwt -->  https://github.com/jwtk/jjwt#install-jdk-maven
+```
 
