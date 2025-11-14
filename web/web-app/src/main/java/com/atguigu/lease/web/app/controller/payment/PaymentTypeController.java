@@ -24,13 +24,14 @@ public class PaymentTypeController {
     @Operation(summary = "根据房间id获取可选支付方式列表")
     @GetMapping("listByRoomId")
     public Result<List<PaymentType>> list(@RequestParam Long id) {
-        List<PaymentType> list = paymentTypeService.list();
+        List<PaymentType> list = paymentTypeService.listByRoomId(id);
         return Result.ok(list);
     }
 
     @Operation(summary = "获取全部支付方式列表")
     @GetMapping("list")
     public Result<List<PaymentType>> list() {
-        return Result.ok();
+        List<PaymentType> list = paymentTypeService.list();
+        return Result.ok(list);
     }
 }
