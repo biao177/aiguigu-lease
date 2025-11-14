@@ -4,9 +4,15 @@ import com.atguigu.lease.common.constant.RedisConstant;
 import com.atguigu.lease.common.exception.LeaseException;
 import com.atguigu.lease.common.result.ResultCodeEnum;
 import com.atguigu.lease.common.sms.AliyunSMSProperties;
+import com.atguigu.lease.common.utils.JwtUtil;
 import com.atguigu.lease.common.utils.VerifyCodeUtil;
+import com.atguigu.lease.model.entity.UserInfo;
+import com.atguigu.lease.model.enums.BaseStatus;
 import com.atguigu.lease.web.app.service.LoginService;
 import com.atguigu.lease.web.app.service.SmsService;
+import com.atguigu.lease.web.app.service.UserInfoService;
+import com.atguigu.lease.web.app.vo.user.LoginVo;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -23,6 +29,8 @@ public class LoginServiceImpl implements LoginService {
     private SmsService smsService;
     @Autowired
     private AliyunSMSProperties aliyunSMSProperties;
+    @Autowired
+    private UserInfoService userInfoService;
 
     @Override
     public void getSMSCode(String phone) {
@@ -53,5 +61,48 @@ public class LoginServiceImpl implements LoginService {
             // 若没有开启，通知前端，模拟出验证码功能
             throw new LeaseException(ResultCodeEnum.APP_SEND_SMS_MOCK.getMessage() + " : [ " + verifyCode + " ]", ResultCodeEnum.APP_SEND_SMS_MOCK.getCode());
         }
+    }
+
+    @Override
+    public String login(LoginVo loginVo) {
+        //1.判断手机号码和验证码是否为空
+        if (!StringUtils.hasText(loginVo.getPhone())) {
+            throw new LeaseException(ResultCodeEnum.APP_LOGIN_PHONE_EMPTY);
+        }
+
+        if (!StringUtils.hasText(loginVo.getCode())) {
+            throw new LeaseException(ResultCodeEnum.APP_LOGIN_CODE_EMPTY);
+        }
+
+        //2.校验验证码
+        String key = RedisConstant.APP_LOGIN_PREFIX + loginVo.getPhone();
+        String code = redisTemplate.opsForValue().get(key);
+        if (code == null) {
+            throw new LeaseException(ResultCodeEnum.APP_LOGIN_CODE_EXPIRED);
+        }
+
+        if (!code.equals(loginVo.getCode())) {
+            throw new LeaseException(ResultCodeEnum.APP_LOGIN_CODE_ERROR);
+        }
+
+        //3.判断用户是否存在,不存在则注册（创建用户）
+        LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserInfo::getPhone, loginVo.getPhone());
+        UserInfo userInfo = userInfoService.getOne(queryWrapper);
+        if (userInfo == null) {
+            userInfo = new UserInfo();
+            userInfo.setPhone(loginVo.getPhone());
+            userInfo.setStatus(BaseStatus.ENABLE);
+            userInfo.setNickname("用户-" + loginVo.getPhone().substring(6));
+            userInfoService.save(userInfo);
+        }
+
+        //4.判断用户是否被禁
+        if (userInfo.getStatus().equals(BaseStatus.DISABLE)) {
+            throw new LeaseException(ResultCodeEnum.APP_ACCOUNT_DISABLED_ERROR);
+        }
+
+        //5.创建并返回TOKEN
+        return JwtUtil.createToken(userInfo.getId(), loginVo.getPhone());
     }
 }
